@@ -2,6 +2,7 @@
 
 class GeminiService {
     constructor() {
+        // Using v1beta endpoint which is the current stable version
         this.apiEndpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
         this.apiKey = null;
     }
@@ -41,17 +42,23 @@ class GeminiService {
             });
 
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error?.message || `API request failed: ${response.status}`);
+                const errorData = await response.json().catch(() => ({}));
+                const errorMessage = errorData.error?.message || `API request failed with status ${response.status}`;
+                console.error('Gemini API error details:', errorData);
+                throw new Error(errorMessage);
             }
 
             const data = await response.json();
 
             if (!data.candidates || data.candidates.length === 0) {
-                throw new Error('No response generated');
+                throw new Error('No response generated from API');
             }
 
             const content = data.candidates[0].content;
+            if (!content || !content.parts || !content.parts[0] || !content.parts[0].text) {
+                throw new Error('Invalid response format from API');
+            }
+
             return content.parts[0].text;
         } catch (error) {
             console.error('Gemini API error:', error);
@@ -118,9 +125,10 @@ Answer:`;
     async validateApiKey(apiKey) {
         this.setApiKey(apiKey);
         try {
-            await this.generateContent('Hello', { maxOutputTokens: 10 });
+            const result = await this.generateContent('Test', { maxOutputTokens: 10 });
             return true;
         } catch (error) {
+            console.error('API key validation error:', error);
             return false;
         }
     }
