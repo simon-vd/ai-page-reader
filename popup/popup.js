@@ -137,51 +137,6 @@ function setupEventListeners() {
     document.getElementById('speedRange').addEventListener('input', async (e) => {
         const rate = parseFloat(e.target.value);
         document.getElementById('speedValue').textContent = rate.toFixed(1);
-        await StorageUtil.updateSetting('speechRate', rate);
-    });
-}
-
-// Handle read page
-async function handleReadPage() {
-    try {
-        updateStatus('Extracting page content...', 'loading');
-
-        // Get page content from content script
-        const response = await browser.tabs.sendMessage(currentTabId, {
-            action: 'getPageContent'
-        });
-
-        if (!response || !response.content) {
-            throw new Error('Could not extract page content');
-        }
-
-        const { content, title } = response;
-
-        // Get settings
-        const settings = await StorageUtil.getSettings();
-        const voices = ttsService.getVoices();
-        const voiceIndex = document.getElementById('voiceSelect').value;
-        const selectedVoice = voices[voiceIndex];
-
-        // Start reading
-        isReading = true;
-        showProgress();
-        await ttsService.speak(content, {
-            voice: selectedVoice,
-            settings
-        });
-
-    } catch (error) {
-        console.error('Error reading page:', error);
-        updateStatus(`Error: ${error.message}`, 'error');
-        isReading = false;
-    }
-}
-
-// Handle summarize
-async function handleSummarize() {
-    try {
-        updateStatus('Generating summary...', 'loading');
 
         // Check API key
         const apiKey = await StorageUtil.getApiKey();
