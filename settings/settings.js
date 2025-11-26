@@ -112,78 +112,98 @@ function setupEventListeners() {
 // Handle test API key
 async function handleTestKey() {
     const apiKey = document.getElementById('apiKeyInput').value.trim();
-    const status = document.getElementById('keyStatus');
     const btn = document.getElementById('testKeyBtn');
 
     if (!apiKey) {
         showStatus('keyStatus', 'Please enter an API key', 'error');
         return;
-        if (!apiKey) {
-            showStatus('keyStatus', 'Please enter an API key', 'error');
-            return;
-        }
-
-        try {
-            await StorageUtil.setApiKey(apiKey);
-            showStatus('keyStatus', '✅ API key saved successfully!', 'success');
-        } catch (error) {
-            console.error('Error saving API key:', error);
-            showStatus('keyStatus', `❌ Error saving: ${error.message}`, 'error');
-        }
     }
 
-    // Handle save speech settings
-    async function handleSaveSpeech() {
-        try {
-            const settings = {
-                voiceURI: document.getElementById('defaultVoice').value,
-                speechRate: parseFloat(document.getElementById('defaultSpeed').value),
-                speechPitch: parseFloat(document.getElementById('defaultPitch').value),
-                speechVolume: parseFloat(document.getElementById('defaultVolume').value)
-            };
+    btn.disabled = true;
+    btn.innerHTML = 'Testing... <span class="loading-spinner"></span>';
 
-            await StorageUtil.saveSettings(settings);
-            showStatus('speechStatus', '✅ Speech settings saved!', 'success');
-        } catch (error) {
-            console.error('Error saving speech settings:', error);
-            showStatus('speechStatus', `❌ Error: ${error.message}`, 'error');
-        }
+    try {
+        await geminiService.validateApiKey(apiKey);
+        showStatus('keyStatus', '✅ API key is valid!', 'success');
+    } catch (error) {
+        console.error('Error testing API key:', error);
+        showStatus('keyStatus', `❌ Invalid: ${error.message}`, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'Test Connection';
+    }
+}
+
+// Handle save API key
+async function handleSaveKey() {
+    const apiKey = document.getElementById('apiKeyInput').value.trim();
+
+    if (!apiKey) {
+        showStatus('keyStatus', 'Please enter an API key', 'error');
+        return;
     }
 
-    // Handle clear data
-    async function handleClearData() {
-        if (!confirm('Are you sure you want to clear all data? This will remove your API key, settings, and conversation history.')) {
-            return;
-        }
+    try {
+        await StorageUtil.setApiKey(apiKey);
+        showStatus('keyStatus', '✅ API key saved successfully!', 'success');
+    } catch (error) {
+        console.error('Error saving API key:', error);
+        showStatus('keyStatus', `❌ Error saving: ${error.message}`, 'error');
+    }
+}
 
-        try {
-            await StorageUtil.clearAll();
+// Handle save speech settings
+async function handleSaveSpeech() {
+    try {
+        const settings = {
+            voiceURI: document.getElementById('defaultVoice').value,
+            speechRate: parseFloat(document.getElementById('defaultSpeed').value),
+            speechPitch: parseFloat(document.getElementById('defaultPitch').value),
+            speechVolume: parseFloat(document.getElementById('defaultVolume').value)
+        };
 
-            // Reset form
-            document.getElementById('apiKeyInput').value = '';
-            document.getElementById('defaultSpeed').value = 1.0;
-            document.getElementById('speedValue').textContent = '1.0';
-            document.getElementById('defaultPitch').value = 1.0;
-            document.getElementById('pitchValue').textContent = '1.0';
-            document.getElementById('defaultVolume').value = 1.0;
-            document.getElementById('volumeValue').textContent = '100';
+        await StorageUtil.saveSettings(settings);
+        showStatus('speechStatus', '✅ Speech settings saved!', 'success');
+    } catch (error) {
+        console.error('Error saving speech settings:', error);
+        showStatus('speechStatus', `❌ Error: ${error.message}`, 'error');
+    }
+}
 
-            alert('✅ All data cleared successfully!');
-        } catch (error) {
-            console.error('Error clearing data:', error);
-            alert(`❌ Error: ${error.message}`);
-        }
+// Handle clear data
+async function handleClearData() {
+    if (!confirm('Are you sure you want to clear all data? This will remove your API key, settings, and conversation history.')) {
+        return;
     }
 
-    // Show status message
-    function showStatus(elementId, message, type) {
-        const statusEl = document.getElementById(elementId);
-        statusEl.textContent = message;
-        statusEl.className = `status-message ${type}`;
-        statusEl.style.display = 'block';
+    try {
+        await StorageUtil.clearAll();
 
-        // Hide after 5 seconds
-        setTimeout(() => {
-            statusEl.style.display = 'none';
-        }, 5000);
+        // Reset form
+        document.getElementById('apiKeyInput').value = '';
+        document.getElementById('defaultSpeed').value = 1.0;
+        document.getElementById('speedValue').textContent = '1.0';
+        document.getElementById('defaultPitch').value = 1.0;
+        document.getElementById('pitchValue').textContent = '1.0';
+        document.getElementById('defaultVolume').value = 1.0;
+        document.getElementById('volumeValue').textContent = '100';
+
+        alert('✅ All data cleared successfully!');
+    } catch (error) {
+        console.error('Error clearing data:', error);
+        alert(`❌ Error: ${error.message}`);
     }
+}
+
+// Show status message
+function showStatus(elementId, message, type) {
+    const statusEl = document.getElementById(elementId);
+    statusEl.textContent = message;
+    statusEl.className = `status-message ${type}`;
+    statusEl.style.display = 'block';
+
+    // Hide after 5 seconds
+    setTimeout(() => {
+        statusEl.style.display = 'none';
+    }, 5000);
+}
