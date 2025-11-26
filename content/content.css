@@ -1,0 +1,10 @@
+/* Content script styling for page highlights */
+
+.ai-reader-highlight {
+    background-color: rgba(139, 92, 246, 0.3);
+    transition: background-color 0.3s ease;
+}
+
+.ai-reader-highlight.active {
+    background-color: rgba(139, 92, 246, 0.5);
+}

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Page Reader Settings</title>
+    <link rel="stylesheet" href="settings.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>⚙️ AI Page Reader Settings</h1>
+            <p class="subtitle">Configure your Gemini API key and preferences</p>
+        </header>
+
+        <div class="settings-section">
+            <h2>🔑 Gemini API Key</h2>
+            <p class="description">
+                Get your free API key from
+                <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a>
+            </p>
+
+            <div class="input-group">
+                <label for="apiKeyInput">API Key</label>
+                <div class="input-with-button">
+                    <input type="password" id="apiKeyInput" placeholder="Enter your Gemini API key">
+                    <button id="toggleKeyBtn" class="toggle-btn" title="Show/Hide">👁️</button>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button id="testKeyBtn" class="secondary-btn">Test Connection</button>
+                <button id="saveKeyBtn" class="primary-btn">Save API Key</button>
+            </div>
+
+            <div id="keyStatus" class="status-message" style="display: none;"></div>
+        </div>
+
+        <div class="settings-section">
+            <h2>🎤 Speech Settings</h2>
+
+            <div class="input-group">
+                <label for="defaultVoice">Default Voice</label>
+                <select id="defaultVoice"></select>
+            </div>
+
+            <div class="input-group">
+                <label for="defaultSpeed">
+                    Speech Rate: <span id="speedValue">1.0</span>x
+                </label>
+                <input type="range" id="defaultSpeed" min="0.5" max="2" step="0.1" value="1">
+            </div>
+
+            <div class="input-group">
+                <label for="defaultPitch">
+                    Speech Pitch: <span id="pitchValue">1.0</span>
+                </label>
+                <input type="range" id="defaultPitch" min="0.5" max="2" step="0.1" value="1">
+            </div>
+
+            <div class="input-group">
+                <label for="defaultVolume">
+                    Volume: <span id="volumeValue">100</span>%
+                </label>
+                <input type="range" id="defaultVolume" min="0" max="1" step="0.1" value="1">
+            </div>
+
+            <button id="saveSpeechBtn" class="primary-btn">Save Speech Settings</button>
+            <div id="speechStatus" class="status-message" style="display: none;"></div>
+        </div>
+
+        <div class="settings-section">
+            <h2>🗑️ Data Management</h2>
+            <p class="description">
+                Clear all conversation history and stored data
+            </p>
+            <button id="clearDataBtn" class="danger-btn">Clear All Data</button>
+        </div>
+
+        <footer>
+            <p>AI Page Reader v1.0.0</p>
+            <p class="muted">Made with ❤️ for better learning</p>
+        </footer>
+    </div>
+
+    <script src="../services/tts.js"></script>
+    <script src="../services/gemini.js"></script>
+    <script src="../utils/storage.js"></script>
+    <script src="settings.js"></script>
+</body>
+
+</html>

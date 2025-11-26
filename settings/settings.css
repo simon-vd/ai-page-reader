@@ -1,0 +1,307 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: hsl(262, 83%, 58%);
+    --primary-dark: hsl(262, 83%, 48%);
+    --secondary: hsl(192, 100%, 48%);
+    --bg: hsl(240, 21%, 15%);
+    --bg-light: hsl(240, 17%, 20%);
+    --bg-lighter: hsl(240, 15%, 25%);
+    --text: hsl(0, 0%, 95%);
+    --text-dim: hsl(0, 0%, 70%);
+    --success: hsl(142, 71%, 45%);
+    --warning: hsl(45, 100%, 51%);
+    --error: hsl(4, 90%, 58%);
+    --danger: hsl(4, 90%, 58%);
+    --shadow: rgba(0, 0, 0, 0.3);
+    --glow: rgba(139, 92, 246, 0.4);
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, var(--bg) 0%, hsl(240, 25%, 12%) 100%);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 40px 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--bg-lighter);
+}
+
+h1 {
+    font-size: 2.5em;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: var(--text-dim);
+    font-size: 1.1em;
+}
+
+h2 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+    color: var(--text);
+    font-weight: 600;
+}
+
+.settings-section {
+    background: var(--bg-light);
+    padding: 30px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    border: 1px solid var(--bg-lighter);
+    box-shadow: 0 4px 12px var(--shadow);
+}
+
+.description {
+    color: var(--text-dim);
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.description a {
+    color: var(--secondary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.description a:hover {
+    color: var(--primary);
+    text-decoration: underline;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text);
+    font-size: 0.95em;
+}
+
+.input-with-button {
+    display: flex;
+    gap: 8px;
+}
+
+input[type="text"],
+input[type="password"],
+select {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--bg);
+    border: 2px solid var(--bg-lighter);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 1em;
+    transition: border-color 0.2s ease;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+select:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.toggle-btn {
+    background: var(--bg-lighter);
+    border: 2px solid var(--bg-lighter);
+    color: var(--text);
+    padding: 12px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: all 0.2s ease;
+    min-width: 52px;
+}
+
+.toggle-btn:hover {
+    background: var(--bg);
+    border-color: var(--primary);
+}
+
+input[type="range"] {
+    width: 100%;
+    height: 8px;
+    background: var(--bg);
+    border-radius: 4px;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--primary);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.5);
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: var(--primary);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.5);
+}
+
+button {
+    font-family: inherit;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 14px 24px;
+    font-size: 1em;
+}
+
+.primary-btn {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    box-shadow: 0 4px 12px var(--shadow);
+}
+
+.primary-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px var(--glow);
+}
+
+.secondary-btn {
+    background: var(--bg-lighter);
+    color: var(--text);
+    border: 2px solid var(--bg-lighter);
+}
+
+.secondary-btn:hover {
+    background: var(--bg);
+    border-color: var(--primary);
+}
+
+.danger-btn {
+    background: linear-gradient(135deg, var(--danger), hsl(4, 90%, 48%));
+    color: white;
+    box-shadow: 0 4px 12px var(--shadow);
+}
+
+.danger-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+}
+
+.button-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.status-message {
+    margin-top: 15px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.9em;
+    font-weight: 500;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.status-message.success {
+    background: rgba(34, 197, 94, 0.2);
+    border-left: 4px solid var(--success);
+    color: var(--success);
+}
+
+.status-message.error {
+    background: rgba(239, 68, 68, 0.2);
+    border-left: 4px solid var(--error);
+    color: var(--error);
+}
+
+.status-message.warning {
+    background: rgba(245, 158, 11, 0.2);
+    border-left: 4px solid var(--warning);
+    color: var(--warning);
+}
+
+footer {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--bg-lighter);
+    color: var(--text-dim);
+}
+
+footer p {
+    margin: 5px 0;
+}
+
+.muted {
+    font-size: 0.9em;
+    opacity: 0.7;
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--bg-lighter);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-left: 8px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
