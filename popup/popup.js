@@ -137,6 +137,70 @@ function setupEventListeners() {
     document.getElementById('speedRange').addEventListener('input', async (e) => {
         const rate = parseFloat(e.target.value);
         document.getElementById('speedValue').textContent = rate.toFixed(1);
+        await StorageUtil.updateSetting('speechRate', rate);
+    });
+}
+
+// Check if content script is available
+async function ensureContentScript() {
+    try {
+        const response = await browser.tabs.sendMessage(currentTabId, {
+            action: 'getPageContent'
+        });
+        return { success: true, response };
+    } catch (error) {
+        // Check if it's a special page where content scripts can't run
+        const tab = await browser.tabs.get(currentTabId);
+        const url = tab.url || '';
+
+        if (url.startsWith('about:') || url.startsWith('chrome:') ||
+            url.startsWith('moz-extension:') || url.startsWith('file:')) {
+            throw new Error('Cannot run on this type of page. Please navigate to a regular webpage.');
+        }
+
+        // Content script might not be loaded yet
+        throw new Error('Content script not loaded. Try refreshing the page or clicking on a different tab.');
+    }
+}
+
+// Handle read page
+async function handleReadPage() {
+    try {
+        updateStatus('Getting page content...', 'loading');
+
+        const { response } = await ensureContentScript();
+
+        if (!response || !response.content) {
+            throw new Error('Could not extract page content');
+        }
+
+        const { content } = response;
+
+        // Read the page content
+        updateStatus('Reading page...', 'reading');
+        const settings = await StorageUtil.getSettings();
+        const voices = ttsService.getVoices();
+        const voiceIndex = document.getElementById('voiceSelect').value;
+        const selectedVoice = voices[voiceIndex];
+
+        showProgress();
+        isReading = true;
+        await ttsService.speak(content, {
+            voice: selectedVoice,
+            settings
+        });
+
+    } catch (error) {
+        console.error('Error reading page:', error);
+        updateStatus(`Error: ${error.message}`, 'error');
+        isReading = false;
+    }
+}
+
+// Handle summarize
+async function handleSummarize() {
+    try {
+        updateStatus('Generating summary...', 'loading');
 
         // Check API key
         const apiKey = await StorageUtil.getApiKey();
@@ -147,9 +211,7 @@ function setupEventListeners() {
         geminiService.setApiKey(apiKey);
 
         // Get page content
-        const response = await browser.tabs.sendMessage(currentTabId, {
-            action: 'getPageContent'
-        });
+        const { response } = await ensureContentScript();
 
         if (!response || !response.content) {
             throw new Error('Could not extract page content');
@@ -161,7 +223,7 @@ function setupEventListeners() {
         const summary = await geminiService.summarizePage(content, title);
 
         // Add to chat
-        addMessageToChat('assistant', `📝 Summary:\n\n${summary}`);
+        addMessageToChat('assistant', `Summary:\n\n${summary}`);
 
         // Read summary
         updateStatus('Reading summary...', 'reading');
@@ -205,9 +267,7 @@ async function handleSendMessage() {
         geminiService.setApiKey(apiKey);
 
         // Get page content
-        const response = await browser.tabs.sendMessage(currentTabId, {
-            action: 'getPageContent'
-        });
+        const { response } = await ensureContentScript();
 
         if (!response || !response.content) {
             throw new Error('Could not extract page content');
@@ -324,6 +384,6 @@ function updateProgress(percent) {
 async function checkApiKey() {
     const apiKey = await StorageUtil.getApiKey();
     if (!apiKey) {
-        updateStatus('⚠️ API key not configured', 'warning');
+        updateStatus('API key not configured', 'warning');
     }
 }
