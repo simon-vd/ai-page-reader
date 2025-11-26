@@ -1,5 +1,8 @@
 // Popup script - Main UI logic
 
+// Initialize services
+const geminiService = new GeminiService();
+
 let currentTabId = null;
 let conversationHistory = [];
 let isReading = false;
