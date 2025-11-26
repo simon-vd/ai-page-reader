@@ -17,7 +17,7 @@
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/ai-page-reader.git
+   git clone https://github.com/simon-vd/ai-page-reader.git
    cd ai-page-reader
    ```
 
