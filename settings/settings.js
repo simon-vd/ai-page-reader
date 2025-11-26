@@ -1,5 +1,8 @@
 // Settings page logic
 
+// Initialize services
+const geminiService = new GeminiService();
+
 // Initialize settings page
 document.addEventListener('DOMContentLoaded', async () => {
     await loadApiKey();
