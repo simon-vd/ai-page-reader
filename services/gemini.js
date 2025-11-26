@@ -3,7 +3,7 @@
 class GeminiService {
     constructor() {
         // Using gemini-pro (most stable and widely available model)
-        this.apiEndpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+        this.apiEndpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent';
         this.apiKey = null;
     }
 
