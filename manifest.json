@@ -1,18 +1,3 @@
-{
-  "manifest_version": 2,
-  "name": "AI Page Reader",
-  "version": "1.0.0",
-  "description": "Read web pages aloud with AI-powered summaries and Q&A using Gemini API",
-  "icons": {
-    "48": "assets/icons/icon-48.svg",
-    "96": "assets/icons/icon-96.svg"
-  },
-  "content_scripts": [
-    {
-      "matches": [
-        "<all_urls>"
-      ],
-      "js": [
         "content/content.js"
       ],
       "css": [
