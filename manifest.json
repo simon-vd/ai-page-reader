@@ -10,6 +10,7 @@
   "permissions": [
     "activeTab",
     "storage",
+    "downloads",
     "<all_urls>"
   ],
   "browser_action": {
@@ -44,6 +45,8 @@
     "open_in_tab": true
   },
   "web_accessible_resources": [
-    "assets/*"
+    "assets/*",
+    "popup/preview.html",
+    "popup/preview.js"
   ]
 }

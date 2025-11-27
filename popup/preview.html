@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Preview</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Dark mode with blue tint */
+            --bg-primary: #0f1419;
+            --bg-secondary: #16181d;
+            --bg-tertiary: #1e2128;
+            --bg-hover: #252930;
+
+            /* Blue accent colors */
+            --blue-primary: #3b82f6;
+            --blue-hover: #2563eb;
+            --blue-light: #60a5fa;
+            --blue-dim: rgba(59, 130, 246, 0.1);
+
+            /* Text colors */
+            --text-primary: #e4e6eb;
+            --text-secondary: #b0b3b8;
+            --text-tertiary: #8a8d93;
+
+            /* Status colors */
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+
+            /* Borders */
+            --border-subtle: #2a2e35;
+            --border-medium: #3a3f47;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+            overflow: hidden;
+        }
+
+        .header {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            padding: 24px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--blue-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--blue-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-medium);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-hover);
+            border-color: var(--blue-primary);
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .preview-area {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 24px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 600px;
+            overflow-y: auto;
+            color: var(--text-primary);
+        }
+
+        .preview-area::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .preview-area::-webkit-scrollbar-track {
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+        }
+
+        .preview-area::-webkit-scrollbar-thumb {
+            background: var(--bg-hover);
+            border-radius: 4px;
+        }
+
+        .preview-area::-webkit-scrollbar-thumb:hover {
+            background: var(--border-medium);
+        }
+
+        .info-bar {
+            background: var(--blue-dim);
+            border-left: 3px solid var(--blue-primary);
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+        }
+
+        .info-bar p {
+            color: var(--blue-light);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .stats {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding: 16px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .stat-item {
+            flex: 1;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 3px solid var(--success);
+            padding: 12px 16px;
+            margin-top: 20px;
+            border-radius: 6px;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .success-message p {
+            color: var(--success);
+            font-size: 14px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 Markdown Preview</h1>
+            <div class="header-actions">
+                <button id="copyBtn" class="btn btn-secondary">Copy to Clipboard</button>
+                <button id="downloadBtn" class="btn btn-primary">Download .md File</button>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="info-bar">
+                <p>Preview your markdown content below. You can copy it to clipboard or download as a .md file.</p>
+            </div>
+
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-label">Characters</div>
+                    <div class="stat-value" id="charCount">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Words</div>
+                    <div class="stat-value" id="wordCount">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Lines</div>
+                    <div class="stat-value" id="lineCount">0</div>
+                </div>
+            </div>
+
+            <div class="preview-area" id="previewArea"></div>
+
+            <div class="success-message" id="successMessage">
+                <p>✓ Copied to clipboard!</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="preview.js"></script>
+</body>
+
+</html>

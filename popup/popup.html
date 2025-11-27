@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+\u003c!DOCTYPE html\u003e
 <html lang="en">
 
 <head>
@@ -38,6 +38,10 @@
       <button id="summarizeBtn" class="secondary-btn">
         <span>Summarize & Read</span>
       </button>
+
+      <button id="convertMarkdownBtn" class="secondary-btn">
+        <span>Convert to Markdown</span>
+      </button>
     </div>
 
     <div class="progress-section" id="progressSection" style="display: none;">
@@ -74,11 +78,17 @@
         <label for="speedRange">Speed: <span id="speedValue">1.0</span>x</label>
         <input type="range" id="speedRange" min="0.5" max="2" step="0.1" value="1">
       </div>
+
+      <div>
+        <label for="pitchRange">Pitch: <span id="pitchValue">1.0</span>x</label>
+        <input type="range" id="pitchRange" min="0.5" max="2" step="0.1" value="1">
+      </div>
     </div>
   </div>
 
   <script src="../services/tts.js"></script>
   <script src="../services/gemini.js"></script>
+  <script src="../services/markdown.js"></script>
   <script src="../utils/storage.js"></script>
   <script src="popup.js"></script>
 </body>

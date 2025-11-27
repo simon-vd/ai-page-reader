@@ -2,6 +2,7 @@
 
 // Initialize services
 const geminiService = new GeminiService();
+const markdownService = new MarkdownService();
 
 let currentTabId = null;
 let conversationHistory = [];
@@ -123,6 +124,9 @@ function setupEventListeners() {
     document.getElementById('settingsBtn').addEventListener('click', () => {
         browser.runtime.openOptionsPage();
     });
+
+    // Convert to Markdown button
+    document.getElementById('convertMarkdownBtn').addEventListener('click', handleConvertToMarkdown);
 
     // Voice selection
     document.getElementById('voiceSelect').addEventListener('change', async (e) => {
@@ -385,5 +389,56 @@ async function checkApiKey() {
     const apiKey = await StorageUtil.getApiKey();
     if (!apiKey) {
         updateStatus('API key not configured', 'warning');
+    }
+}
+
+// Handle convert to markdown
+async function handleConvertToMarkdown() {
+    try {
+        updateStatus('Converting to markdown...', 'loading');
+
+        // Get page content with HTML structure
+        const response = await browser.tabs.sendMessage(currentTabId, {
+            action: 'convertToMarkdown'
+        });
+
+        if (!response || !response.htmlElement) {
+            throw new Error('Could not extract page content');
+        }
+
+        const { htmlElement, title, url } = response;
+
+        // Create a temporary div to hold the HTML
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = htmlElement;
+
+        // Convert to markdown
+        const markdown = markdownService.convertToMarkdown(tempDiv);
+        const cleanedMarkdown = markdownService.cleanupMarkdown(markdown);
+
+        // Add page metadata at the top
+        const fullMarkdown = `# ${title}\n\nSource: ${url}\n\n---\n\n${cleanedMarkdown}`;
+
+        // Generate filename
+        const filename = markdownService.generateFilename(title) + '.md';
+
+        // Store in browser.storage for preview page
+        await browser.storage.local.set({
+            markdownPreview: {
+                content: fullMarkdown,
+                filename: filename
+            }
+        });
+
+        // Open preview in new tab
+        await browser.tabs.create({
+            url: browser.runtime.getURL('popup/preview.html')
+        });
+
+        updateStatus('Preview opened in new tab!', 'success');
+
+    } catch (error) {
+        console.error('Error converting to markdown:', error);
+        updateStatus(`Error: ${error.message}`, 'error');
     }
 }

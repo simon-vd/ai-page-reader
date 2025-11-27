@@ -20,7 +20,7 @@ const StorageUtil = {
       speechPitch: 1.0,
       speechVolume: 1.0
     };
-    
+
     const result = await browser.storage.local.get('settings');
     return result.settings || defaults;
   },

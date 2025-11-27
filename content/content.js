@@ -6,6 +6,9 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         const content = extractPageContent();
         const title = document.title;
         sendResponse({ content, title });
+    } else if (request.action === 'convertToMarkdown') {
+        const result = getPageContentForMarkdown();
+        sendResponse(result);
     }
     return true;
 });
@@ -75,6 +78,68 @@ function extractPageContent() {
         .trim();
 
     return text;
+}
+
+// Get page content as HTML for markdown conversion
+function getPageContentForMarkdown() {
+    // Try to find main content area
+    const contentSelectors = [
+        'article',
+        '[role="main"]',
+        'main',
+        '.post-content',
+        '.article-content',
+        '.entry-content',
+        '#content',
+        '.content'
+    ];
+
+    let mainContent = null;
+
+    // Try each selector
+    for (const selector of contentSelectors) {
+        const element = document.querySelector(selector);
+        if (element) {
+            mainContent = element;
+            break;
+        }
+    }
+
+    // Fall back to body if no main content found
+    if (!mainContent) {
+        mainContent = document.body;
+    }
+
+    // Clone the element to avoid modifying the page
+    const clone = mainContent.cloneNode(true);
+
+    // Remove unwanted elements (but keep structure for markdown conversion)
+    const unwantedSelectors = [
+        'script',
+        'style',
+        'nav',
+        'header',
+        'footer',
+        '.advertisement',
+        '.ads',
+        '.sidebar',
+        '.comments',
+        '.social-share',
+        '[role="banner"]',
+        '[role="navigation"]',
+        '[role="complementary"]'
+    ];
+
+    unwantedSelectors.forEach(selector => {
+        const elements = clone.querySelectorAll(selector);
+        elements.forEach(el => el.remove());
+    });
+
+    return {
+        htmlElement: clone.innerHTML,
+        title: document.title,
+        url: window.location.href
+    };
 }
 
 // Highlight text as it's being read (future enhancement)
