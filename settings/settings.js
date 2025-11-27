@@ -79,10 +79,10 @@ function setupEventListeners() {
 
         if (input.type === 'password') {
             input.type = 'text';
-            btn.textContent = '🙈';
+            btn.textContent = 'Hide';
         } else {
             input.type = 'password';
-            btn.textContent = '👁️';
+            btn.textContent = 'Show';
         }
     });
 
@@ -127,10 +127,10 @@ async function handleTestKey() {
 
     try {
         await geminiService.validateApiKey(apiKey);
-        showStatus('keyStatus', '✅ API key is valid!', 'success');
+        showStatus('keyStatus', 'API key is valid!', 'success');
     } catch (error) {
         console.error('Error testing API key:', error);
-        showStatus('keyStatus', `❌ Invalid: ${error.message}`, 'error');
+        showStatus('keyStatus', `Invalid: ${error.message}`, 'error');
     } finally {
         btn.disabled = false;
         btn.innerHTML = 'Test Connection';
@@ -148,10 +148,10 @@ async function handleSaveKey() {
 
     try {
         await StorageUtil.setApiKey(apiKey);
-        showStatus('keyStatus', '✅ API key saved successfully!', 'success');
+        showStatus('keyStatus', 'API key saved successfully!', 'success');
     } catch (error) {
         console.error('Error saving API key:', error);
-        showStatus('keyStatus', `❌ Error saving: ${error.message}`, 'error');
+        showStatus('keyStatus', `Error saving: ${error.message}`, 'error');
     }
 }
 
@@ -166,10 +166,10 @@ async function handleSaveSpeech() {
         };
 
         await StorageUtil.saveSettings(settings);
-        showStatus('speechStatus', '✅ Speech settings saved!', 'success');
+        showStatus('speechStatus', 'Speech settings saved!', 'success');
     } catch (error) {
         console.error('Error saving speech settings:', error);
-        showStatus('speechStatus', `❌ Error: ${error.message}`, 'error');
+        showStatus('speechStatus', `Error: ${error.message}`, 'error');
     }
 }
 
@@ -191,10 +191,10 @@ async function handleClearData() {
         document.getElementById('defaultVolume').value = 1.0;
         document.getElementById('volumeValue').textContent = '100';
 
-        alert('✅ All data cleared successfully!');
+        alert('All data cleared successfully!');
     } catch (error) {
         console.error('Error clearing data:', error);
-        alert(`❌ Error: ${error.message}`);
+        alert(`Error: ${error.message}`);
     }
 }
 
