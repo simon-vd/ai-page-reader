@@ -8,6 +8,7 @@
 - **Summarize** the current page with a single click.
 - **Q&A**: Ask any question about the page content.
 - **Convert to Markdown**: Convert the page content to a markdown file.
+**note that images dont work for the markdown conversion**
 ---
 
 ## Instalation
