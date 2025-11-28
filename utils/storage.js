@@ -8,7 +8,7 @@ const StorageUtil = {
   },
 
   // Save Gemini API key
-  async setApiKey(apiKey) {
+  async saveApiKey(apiKey) {
     await browser.storage.local.set({ geminiApiKey: apiKey });
   },
 

@@ -131,6 +131,15 @@ Answer:`;
         await this.generateContent('Test', { maxOutputTokens: 10 });
         return true;
     }
+
+    // Test connection with current API key
+    async testConnection() {
+        if (!this.apiKey) {
+            throw new Error('API key not set');
+        }
+        await this.generateContent('Test', { maxOutputTokens: 10 });
+        return true;
+    }
 }
 
 // Make it available globally

@@ -88,10 +88,18 @@ function displayMarkdown(content) {
     // Display raw markdown
     document.getElementById('rawPreview').textContent = content;
 
+
     // Render markdown to HTML
     try {
         const html = marked.parse(content);
-        document.getElementById('renderedPreview').innerHTML = html;
+        // Use DOMParser for safer HTML insertion
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const renderedPreview = document.getElementById('renderedPreview');
+        renderedPreview.textContent = ''; // Clear existing content
+        while (doc.body.firstChild) {
+            renderedPreview.appendChild(doc.body.firstChild);
+        }
     } catch (error) {
         console.error('Error rendering markdown:', error);
         document.getElementById('renderedPreview').textContent = 'Error rendering markdown preview.';

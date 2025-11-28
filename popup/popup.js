@@ -39,6 +39,9 @@ function setupEventListeners() {
         browser.runtime.openOptionsPage();
     });
 
+    // Summarize button
+    document.getElementById('summarizeBtn').addEventListener('click', handleSummarizePage);
+
     // Convert to Markdown button
     document.getElementById('convertMarkdownBtn').addEventListener('click', handleConvertToMarkdown);
 }
@@ -61,7 +64,7 @@ async function ensureContentScript() {
         }
 
         // Content script might not be loaded yet
-        throw new Error('Content script not loaded. Try refreshing the page or clicking on a different tab.');
+        throw new Error('Please refresh the page to use the extension.');
     }
 }
 
@@ -184,6 +187,51 @@ async function checkApiKey() {
     }
 }
 
+// Handle summarize page
+async function handleSummarizePage() {
+    try {
+        updateStatus('Generating summary...', 'loading');
+
+        // Check API key
+        const apiKey = await StorageUtil.getApiKey();
+        if (!apiKey) {
+            throw new Error('Please configure your Gemini API key in settings');
+        }
+
+        geminiService.setApiKey(apiKey);
+
+        // Get page content
+        const { response } = await ensureContentScript();
+
+        if (!response || !response.content) {
+            throw new Error('Could not extract page content');
+        }
+
+        const { content, title } = response;
+
+        // Generate summary
+        const summary = await geminiService.summarizePage(content, title);
+
+        // Add summary to chat
+        addMessageToChat('assistant', summary);
+
+        // Save to conversation history
+        conversationHistory.push({
+            role: 'assistant',
+            content: summary
+        });
+        await StorageUtil.saveConversationHistory(currentTabId, conversationHistory);
+
+        updateStatus('Summary generated!', 'success');
+
+    } catch (error) {
+        console.error('Error summarizing page:', error);
+        updateStatus(`Error: ${error.message}`, 'error');
+        addMessageToChat('assistant', `Sorry, I couldn't generate a summary: ${error.message}`);
+    }
+}
+
+
 // Handle convert to markdown
 async function handleConvertToMarkdown() {
     try {
@@ -200,9 +248,11 @@ async function handleConvertToMarkdown() {
 
         const { htmlElement, title, url } = response;
 
-        // Create a temporary div to hold the HTML
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = htmlElement;
+
+        // Parse HTML safely using DOMParser
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlElement, 'text/html');
+        const tempDiv = doc.body;
 
         // Convert to markdown
         const markdown = markdownService.convertToMarkdown(tempDiv);

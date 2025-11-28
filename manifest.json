@@ -42,5 +42,17 @@
     "assets/*",
     "popup/preview.html",
     "popup/preview.js"
-  ]
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "ai-page-reader@simon-vd.com",
+      "data_collection_permissions": {
+        "required": [
+          "websiteContent"
+        ],
+        "data_collection": true,
+        "data_collection_description": "This extension sends page content to Google's Gemini API to generate summaries and answer questions. The API key is stored locally in your browser. Page content is only transmitted when you explicitly request a summary or ask a question."
+      }
+    }
+  }
 }
