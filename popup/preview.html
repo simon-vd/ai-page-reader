@@ -5,8 +5,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Markdown Preview</title>
+    <script src="marked.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+        :root {
+            --bg-primary: #0f1419;
+            --bg-secondary: #16181d;
+            --bg-tertiary: #1e2128;
+            --bg-hover: #252930;
+            --blue-primary: #3b82f6;
+            --blue-hover: #2563eb;
+            --blue-light: #60a5fa;
+            --blue-dim: rgba(59, 130, 246, 0.1);
+            --text-primary: #e4e6eb;
+            --text-secondary: #b0b3b8;
+            --text-tertiary: #8a8d93;
+            --success: #10b981;
+            --border-subtle: #2a2e35;
+            --border-medium: #3a3f47;
+        }
 
         * {
             margin: 0;
@@ -14,36 +32,8 @@
             box-sizing: border-box;
         }
 
-        :root {
-            /* Dark mode with blue tint */
-            --bg-primary: #0f1419;
-            --bg-secondary: #16181d;
-            --bg-tertiary: #1e2128;
-            --bg-hover: #252930;
-
-            /* Blue accent colors */
-            --blue-primary: #3b82f6;
-            --blue-hover: #2563eb;
-            --blue-light: #60a5fa;
-            --blue-dim: rgba(59, 130, 246, 0.1);
-
-            /* Text colors */
-            --text-primary: #e4e6eb;
-            --text-secondary: #b0b3b8;
-            --text-tertiary: #8a8d93;
-
-            /* Status colors */
-            --success: #10b981;
-            --warning: #f59e0b;
-            --error: #ef4444;
-
-            /* Borders */
-            --border-subtle: #2a2e35;
-            --border-medium: #3a3f47;
-        }
-
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Inter', sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
@@ -51,7 +41,7 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
             background: var(--bg-secondary);
             border-radius: 12px;
@@ -59,9 +49,9 @@
             overflow: hidden;
         }
 
+        /* Header */
         .header {
             background: var(--bg-tertiary);
-            color: var(--text-primary);
             padding: 24px 30px;
             display: flex;
             justify-content: space-between;
@@ -72,7 +62,6 @@
         .header h1 {
             font-size: 20px;
             font-weight: 600;
-            letter-spacing: -0.02em;
         }
 
         .header-actions {
@@ -80,15 +69,14 @@
             gap: 10px;
         }
 
+        /* Buttons */
         .btn {
             padding: 10px 16px;
             border: none;
             border-radius: 6px;
-            font-size: 14px;
-            font-weight: 500;
+            font: 500 14px inherit;
             cursor: pointer;
             transition: all 0.15s ease;
-            font-family: inherit;
         }
 
         .btn-primary {
@@ -98,7 +86,6 @@
 
         .btn-primary:hover {
             background: var(--blue-hover);
-            transform: translateY(-1px);
         }
 
         .btn-secondary {
@@ -109,44 +96,11 @@
 
         .btn-secondary:hover {
             background: var(--bg-hover);
-            border-color: var(--blue-primary);
         }
 
+        /* Content Area */
         .content {
             padding: 30px;
-        }
-
-        .preview-area {
-            background: var(--bg-primary);
-            border: 1px solid var(--border-subtle);
-            border-radius: 8px;
-            padding: 24px;
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-            line-height: 1.6;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            max-height: 600px;
-            overflow-y: auto;
-            color: var(--text-primary);
-        }
-
-        .preview-area::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .preview-area::-webkit-scrollbar-track {
-            background: var(--bg-tertiary);
-            border-radius: 4px;
-        }
-
-        .preview-area::-webkit-scrollbar-thumb {
-            background: var(--bg-hover);
-            border-radius: 4px;
-        }
-
-        .preview-area::-webkit-scrollbar-thumb:hover {
-            background: var(--border-medium);
         }
 
         .info-bar {
@@ -160,9 +114,9 @@
         .info-bar p {
             color: var(--blue-light);
             font-size: 14px;
-            line-height: 1.5;
         }
 
+        /* Stats */
         .stats {
             display: flex;
             gap: 16px;
@@ -183,7 +137,6 @@
             color: var(--text-tertiary);
             text-transform: uppercase;
             margin-bottom: 6px;
-            letter-spacing: 0.05em;
             font-weight: 600;
         }
 
@@ -193,6 +146,178 @@
             color: var(--text-primary);
         }
 
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--text-secondary);
+            font: 500 14px inherit;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .tab:hover {
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            color: var(--blue-primary);
+            border-bottom-color: var(--blue-primary);
+        }
+
+        /* Preview Views */
+        .preview-view {
+            display: none;
+        }
+
+        .preview-view.active {
+            display: block;
+        }
+
+        .raw-preview,
+        .rendered-preview {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 24px;
+            max-height: 800px;
+            overflow-y: auto;
+        }
+
+        .raw-preview {
+            font: 13px 'Courier New', monospace;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* Rendered Markdown Styles */
+        .rendered-preview {
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .rendered-preview h1 {
+            font-size: 2em;
+            margin: 0.67em 0;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 0.3em;
+        }
+
+        .rendered-preview h2 {
+            font-size: 1.5em;
+            margin: 0.75em 0 0.5em;
+        }
+
+        .rendered-preview h3 {
+            font-size: 1.25em;
+            margin: 0.75em 0 0.5em;
+        }
+
+        .rendered-preview h1,
+        .rendered-preview h2,
+        .rendered-preview h3 {
+            font-weight: 600;
+        }
+
+        .rendered-preview p,
+        .rendered-preview ul,
+        .rendered-preview ol {
+            margin: 1em 0;
+            color: var(--text-secondary);
+        }
+
+        .rendered-preview ul,
+        .rendered-preview ol {
+            padding-left: 2em;
+        }
+
+        .rendered-preview li {
+            margin: 0.5em 0;
+        }
+
+        .rendered-preview a {
+            color: var(--blue-light);
+            text-decoration: none;
+        }
+
+        .rendered-preview a:hover {
+            text-decoration: underline;
+        }
+
+        .rendered-preview code {
+            background: var(--bg-tertiary);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font: 0.9em 'Courier New', monospace;
+            color: var(--blue-light);
+        }
+
+        .rendered-preview pre {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 1em 0;
+        }
+
+        .rendered-preview pre code {
+            background: none;
+            padding: 0;
+            color: var(--text-primary);
+        }
+
+        .rendered-preview blockquote {
+            border-left: 3px solid var(--blue-primary);
+            padding-left: 1em;
+            margin: 1em 0;
+            color: var(--text-tertiary);
+            font-style: italic;
+        }
+
+        .rendered-preview table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1em 0;
+        }
+
+        .rendered-preview th,
+        .rendered-preview td {
+            border: 1px solid var(--border-subtle);
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        .rendered-preview th {
+            background: var(--bg-tertiary);
+            font-weight: 600;
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-tertiary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-hover);
+            border-radius: 4px;
+        }
+
+        /* Success Message */
         .success-message {
             background: rgba(16, 185, 129, 0.1);
             border-left: 3px solid var(--success);
@@ -200,19 +325,6 @@
             margin-top: 20px;
             border-radius: 6px;
             display: none;
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .success-message.show {
@@ -223,6 +335,118 @@
             color: var(--success);
             font-size: 14px;
             font-weight: 500;
+        }
+
+        /* Chat Section */
+        .chat-section {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .chat-section h2 {
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .chat-description {
+            font-size: 14px;
+            color: var(--text-tertiary);
+            margin-bottom: 16px;
+        }
+
+        .chat-messages {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            padding: 14px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+
+        .welcome-message {
+            color: var(--text-tertiary);
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .message {
+            margin-bottom: 10px;
+        }
+
+        .message.user {
+            text-align: right;
+        }
+
+        .message-content {
+            display: inline-block;
+            padding: 10px 12px;
+            border-radius: 6px;
+            max-width: 85%;
+            word-wrap: break-word;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .message.user .message-content {
+            background: var(--blue-primary);
+            color: white;
+        }
+
+        .message.assistant .message-content {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 8px;
+        }
+
+        #chatInput {
+            flex: 1;
+            padding: 10px 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font: 14px inherit;
+        }
+
+        #chatInput:focus {
+            outline: none;
+            border-color: var(--blue-primary);
+        }
+
+        #chatInput::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .send-btn {
+            width: 44px;
+            height: 44px;
+            background: var(--blue-primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send-btn:hover {
+            background: var(--blue-hover);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
         }
     </style>
 </head>
@@ -239,7 +463,7 @@
 
         <div class="content">
             <div class="info-bar">
-                <p>Preview your markdown content below. You can copy it to clipboard or download as a .md file.</p>
+                <p>Preview your markdown content below. Switch between raw and rendered views using the tabs.</p>
             </div>
 
             <div class="stats">
@@ -257,14 +481,46 @@
                 </div>
             </div>
 
-            <div class="preview-area" id="previewArea"></div>
+            <div class="tabs">
+                <button class="tab" data-tab="raw">Raw Markdown</button>
+                <button class="tab active" data-tab="rendered">Rendered Preview</button>
+            </div>
+
+            <div class="preview-container">
+                <div class="preview-view" id="rawView">
+                    <div class="raw-preview" id="rawPreview"></div>
+                </div>
+                <div class="preview-view active" id="renderedView">
+                    <div class="rendered-preview" id="renderedPreview"></div>
+                </div>
+            </div>
 
             <div class="success-message" id="successMessage">
-                <p>✓ Copied to clipboard!</p>
+                <p>Copied to clipboard!</p>
+            </div>
+
+            <div class="chat-section">
+                <h2>AI Assistant</h2>
+                <p class="chat-description">Ask questions about the markdown content</p>
+                <div class="chat-messages" id="chatMessages">
+                    <div class="welcome-message">Ask me anything about this markdown!</div>
+                </div>
+                <div class="chat-input-container">
+                    <input type="text" id="chatInput" placeholder="e.g., 'What is the main topic?'" autocomplete="off">
+                    <button id="sendChatBtn" class="send-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
+    <script src="marked.min.js"></script>
+    <script src="../services/gemini.js"></script>
+    <script src="../utils/storage.js"></script>
     <script src="preview.js"></script>
 </body>
 

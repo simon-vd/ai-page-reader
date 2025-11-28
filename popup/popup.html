@@ -4,14 +4,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Page Reader</title>
+  <title>AI Page Reader</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 
 <body>
   <div class="container">
     <header>
-      <h1>Page Reader</h1>
+      <h1>AI Page Reader</h1>
       <button id="settingsBtn" class="icon-btn" title="Settings">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="3" />
@@ -25,30 +25,9 @@
     </div>
 
     <div class="controls">
-      <button id="readPageBtn" class="primary-btn">
-        <span>Read Page</span>
-      </button>
-
-      <div class="playback-controls">
-        <button id="pauseBtn" class="control-btn" disabled title="Pause">Pause</button>
-        <button id="resumeBtn" class="control-btn" disabled title="Resume">Resume</button>
-        <button id="stopBtn" class="control-btn" disabled title="Stop">Stop</button>
-      </div>
-
-      <button id="summarizeBtn" class="secondary-btn">
-        <span>Summarize & Read</span>
-      </button>
-
-      <button id="convertMarkdownBtn" class="secondary-btn">
+      <button id="convertMarkdownBtn" class="primary-btn">
         <span>Convert to Markdown</span>
       </button>
-    </div>
-
-    <div class="progress-section" id="progressSection" style="display: none;">
-      <div class="progress-bar">
-        <div class="progress-fill" id="progressFill"></div>
-      </div>
-      <div class="progress-text" id="progressText">0%</div>
     </div>
 
     <div class="chat-section">
@@ -67,26 +46,8 @@
         </button>
       </div>
     </div>
-
-    <div class="voice-settings">
-      <div>
-        <label for="voiceSelect">Voice</label>
-        <select id="voiceSelect"></select>
-      </div>
-
-      <div>
-        <label for="speedRange">Speed: <span id="speedValue">1.0</span>x</label>
-        <input type="range" id="speedRange" min="0.5" max="2" step="0.1" value="1">
-      </div>
-
-      <div>
-        <label for="pitchRange">Pitch: <span id="pitchValue">1.0</span>x</label>
-        <input type="range" id="pitchRange" min="0.5" max="2" step="0.1" value="1">
-      </div>
-    </div>
   </div>
 
-  <script src="../services/tts.js"></script>
   <script src="../services/gemini.js"></script>
   <script src="../services/markdown.js"></script>
   <script src="../utils/storage.js"></script>

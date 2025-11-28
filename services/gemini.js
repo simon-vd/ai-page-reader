@@ -68,19 +68,14 @@ class GeminiService {
 
     // Generate a summary of page content
     async summarizePage(pageContent, pageTitle = '') {
-        const prompt = `You are a knowledgeable teacher explaining content to a student. 
+        const prompt = `You are a teacher explaining content to a student. Respond in SHORT, simple sentences using plain text only. DO NOT use markdown formatting - no asterisks, no backticks, no headers, no bullet points. Just normal text.
     
 Page Title: ${pageTitle}
 
 Content:
 ${pageContent.substring(0, 8000)} 
 
-Please provide a clear, comprehensive summary of this page. Focus on:
-- Main topics and key points
-- Important concepts and ideas
-- Any conclusions or takeaways
-
-Keep the summary natural and conversational, as if you're teaching a student. Make it easy to understand when read aloud.
+Provide a brief summary covering the main points. Keep it short and conversational.
 
 Summary:`;
 
@@ -101,7 +96,7 @@ Summary:`;
             });
         }
 
-        const prompt = `You are a knowledgeable teacher helping a student understand a web page.
+        const prompt = `You are a teacher helping a student. Respond in SHORT, simple sentences using plain text only. DO NOT use markdown formatting - no asterisks, no backticks, no headers, no bullet points. Just normal text.
 
 Page Title: ${pageTitle}
 
@@ -111,13 +106,21 @@ ${conversationContext}
 
 Student's Question: ${question}
 
-Please provide a helpful, clear answer based on the page content. If the answer isn't in the page content, let the student know. Keep your response natural and conversational, as if you're teaching.
+Give a brief, helpful answer. If the answer isn't in the content, say so. Keep it short.
 
 Answer:`;
 
         return await this.generateContent(prompt, {
             temperature: 0.7,
             maxOutputTokens: 400
+        });
+    }
+
+    // Simple chat method for markdown preview
+    async chat(prompt) {
+        return await this.generateContent(prompt, {
+            temperature: 0.7,
+            maxOutputTokens: 500
         });
     }
 

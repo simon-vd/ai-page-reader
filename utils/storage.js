@@ -15,10 +15,7 @@ const StorageUtil = {
   // Get all settings
   async getSettings() {
     const defaults = {
-      voiceURI: null,
-      speechRate: 1.0,
-      speechPitch: 1.0,
-      speechVolume: 1.0
+      theme: 'dark'
     };
 
     const result = await browser.storage.local.get('settings');
